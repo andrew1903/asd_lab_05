@@ -2,12 +2,13 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
-public class Main {
+public class LinkedHash {
 
-    private static final boolean HASH_MODE = false;
-    private static final HashMap<Integer, ArrayList<Integer>> hashTable = new HashMap<>();
-
+    private static final boolean HASH_MODE = true;
+    public static final int ARRAY_LENGTH = 15;
+    private static final HashMap<Integer, ArrayList<Integer>> hashTable = new HashMap<>(ARRAY_LENGTH);
 
     public static void main(String[] args) {
         int number = 21;
@@ -17,6 +18,9 @@ public class Main {
         System.out.println(find(21));
         System.out.println(addElement(2));
         System.out.println(hashTable);
+        for (int i = 0; i < 15; i++){
+            addElement(new Random().nextInt(110));
+        }
         System.out.println(addElement(213));
         System.out.println(hashTable);
         System.out.println(addElement(12));
@@ -47,9 +51,12 @@ public class Main {
 
         if (find(c)) {
             ArrayList<Integer> list;
-            if ((list = hashTable.get(hashCode(c))) != null) {
+            int hash = hashCode(c);
+            if ((list = hashTable.get(hash)) != null) {
 
                 list.remove(c);
+                if (list.size() == 0)
+                    hashTable.remove(hash);
                 return true;
             }
         }
@@ -75,7 +82,7 @@ public class Main {
             result = 31 * result + c;
         } else {
             if (hashTable.size() == 0) result = 1;
-            else result = c % hashTable.size();
+            else result = c % ARRAY_LENGTH;
         }
         return result;
     }
